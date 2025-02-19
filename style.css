@@ -32,25 +32,28 @@ h1 {
     font-weight: bold;
 }
 
-/* Counters (General) */
-.counters, .jar-counters {
+/* Ensures the jars are side by side */
+.jar-counters {
     display: flex;
     justify-content: center;
-    gap: 50px; /* Adjust spacing between elements */
+    gap: 50px; /* Adjusts spacing between jars */
     margin: 20px 0;
+    flex-wrap: wrap; /* Ensures responsiveness */
 }
 
-/* Jar Counters */
+/* Styles each jar */
 .jar {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10px; /* Adjusts spacing between buttons and count */
     padding: 10px;
     border: 2px solid #ccc;
     border-radius: 8px;
-    font-size: 1.5em; /* Adjust font size */
-    background: white; /* Add background if needed */
+    font-size: 1.5em;
+    background: white;
+    flex-direction: row; /* Ensures horizontal layout */
 }
+
 
 button {
     padding: 10px 20px;
