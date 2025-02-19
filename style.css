@@ -45,11 +45,11 @@ h1 {
 .jar {
     display: flex;
     align-items: center;
-    gap: 10px; /* Adjusts spacing between buttons and count */
-    padding: 10px;
+    gap: 5px; /* Adjusts spacing between buttons and count */
+    padding: 5px;
     border: 2px solid #ccc;
     border-radius: 8px;
-    font-size: 1.5em;
+    font-size: 0.75em;
     background: white;
     flex-direction: row; /* Ensures horizontal layout */
 }
@@ -68,7 +68,7 @@ button {
 }
 
 .huge-button {
-    padding: 40px 80px;
+    padding: 30px 70px;
     font-size: 3em;
     margin: 10px;
     cursor: pointer;
