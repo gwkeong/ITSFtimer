@@ -1,48 +1,70 @@
-let countdown;
-let isRunning = false;
-
-function startTimer(seconds) {
-    if (isRunning) return;
-
-    let timeLeft = seconds;
-    const timerDisplay = document.getElementById("timer");
-    document.body.classList.remove("red");
-
-    countdown = setInterval(() => {
-        if (timeLeft <= 0) {
-            clearInterval(countdown);
-            timerDisplay.textContent = "00:00";
-            document.body.classList.add("red"); // Turn background red
-            isRunning = false;
-        } else {
-            timerDisplay.textContent = `00:${timeLeft < 10 ? "0" + timeLeft : timeLeft}`;
-            timeLeft--;
-        }
-    }, 1000);
-
-    isRunning = true;
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    transition: background-color 0.5s;
 }
 
-// Counter logic
-let jar1Count = 0;
-let jar2Count = 0;
-
-function increaseCounter(jar) {
-    if (jar === "jar1") {
-        jar1Count++;
-        document.getElementById("jar1-count").textContent = jar1Count;
-    } else {
-        jar2Count++;
-        document.getElementById("jar2-count").textContent = jar2Count;
-    }
+.container {
+    margin-top: 50px;
 }
 
-function decreaseCounter(jar) {
-    if (jar === "jar1" && jar1Count > 0) {
-        jar1Count--;
-        document.getElementById("jar1-count").textContent = jar1Count;
-    } else if (jar === "jar2" && jar2Count > 0) {
-        jar2Count--;
-        document.getElementById("jar2-count").textContent = jar2Count;
-    }
+h1 {
+    font-size: 2.5em;
+}
+
+/* Timer Buttons */
+.timer-buttons {
+    margin-bottom: 20px;
+}
+
+.big-button {
+    padding: 20px 40px;
+    font-size: 2em;
+    margin: 10px;
+    cursor: pointer;
+}
+
+/* Timer Display */
+#timer {
+    font-size: 4em;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+/* Counters */
+.counters {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 20px 0;
+}
+
+.counter {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    margin: 10px;
+    cursor: pointer;
+}
+
+/* Bottom Timer Buttons */
+.bottom-buttons {
+    margin-top: 30px;
+}
+
+.huge-button {
+    padding: 40px 80px;
+    font-size: 3em;
+    margin: 10px;
+    cursor: pointer;
+}
+
+/* Red background when time runs out */
+body.red {
+    background-color: red;
 }
