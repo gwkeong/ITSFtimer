@@ -20,20 +20,21 @@
         <div id="timer">00:00</div>
 
         <!-- Jar Counters -->
-        <div class="counters">
-            <div class="counter">
-                <h2>Jar 1</h2>
-                <button onclick="decreaseCounter('jar1')">-</button>
-                <span id="jar1-count">0</span>
-                <button onclick="increaseCounter('jar1')">+</button>
-            </div>
-            <div class="counter">
-                <h2>Jar 2</h2>
-                <button onclick="decreaseCounter('jar2')">-</button>
-                <span id="jar2-count">0</span>
-                <button onclick="increaseCounter('jar2')">+</button>
-            </div>
-        </div>
+        <div class="jar-counters">
+    <div class="jar">
+        <h2>Jar 1</h2>
+        <button class="counter-btn" data-counter="jar1" data-operation="minus">-</button>
+        <span id="jar1">0</span>
+        <button class="counter-btn" data-counter="jar1" data-operation="plus">+</button>
+    </div>
+
+    <div class="jar">
+        <h2>Jar 2</h2>
+        <button class="counter-btn" data-counter="jar2" data-operation="minus">-</button>
+        <span id="jar2">0</span>
+        <button class="counter-btn" data-counter="jar2" data-operation="plus">+</button>
+    </div>
+</div>
 
         <!-- Additional Timer Buttons -->
         <div class="bottom-buttons">
