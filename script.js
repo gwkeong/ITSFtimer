@@ -1,39 +1,48 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
-    transition: background-color 0.5s;
+let countdown;
+let isRunning = false;
+
+function startTimer(seconds) {
+    if (isRunning) return;
+
+    let timeLeft = seconds;
+    const timerDisplay = document.getElementById("timer");
+    document.body.classList.remove("red");
+
+    countdown = setInterval(() => {
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerDisplay.textContent = "00:00";
+            document.body.classList.add("red"); // Turn background red
+            isRunning = false;
+        } else {
+            timerDisplay.textContent = `00:${timeLeft < 10 ? "0" + timeLeft : timeLeft}`;
+            timeLeft--;
+        }
+    }, 1000);
+
+    isRunning = true;
 }
 
-.container {
-    margin-top: 50px;
+// Counter logic
+let jar1Count = 0;
+let jar2Count = 0;
+
+function increaseCounter(jar) {
+    if (jar === "jar1") {
+        jar1Count++;
+        document.getElementById("jar1-count").textContent = jar1Count;
+    } else {
+        jar2Count++;
+        document.getElementById("jar2-count").textContent = jar2Count;
+    }
 }
 
-#timer {
-    font-size: 2em;
-    margin-top: 20px;
-    font-weight: bold;
-}
-
-.counters {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin: 20px 0;
-}
-
-.counter {
-    text-align: center;
-    font-size: 1.2em;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 1em;
-    margin: 10px;
-    cursor: pointer;
-}
-
-body.red {
-    background-color: red;
+function decreaseCounter(jar) {
+    if (jar === "jar1" && jar1Count > 0) {
+        jar1Count--;
+        document.getElementById("jar1-count").textContent = jar1Count;
+    } else if (jar === "jar2" && jar2Count > 0) {
+        jar2Count--;
+        document.getElementById("jar2-count").textContent = jar2Count;
+    }
 }
