@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-    margin-top: 50px;
+    margin-top: 40px;
 }
 
 h1 {
@@ -15,13 +15,13 @@ h1 {
 
 /* Timer Buttons */
 .timer-buttons {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .big-button {
-    padding: 20px 40px;
+    padding: 10px 30px;
     font-size: 2em;
-    margin: 10px;
+    margin: 7px;
     cursor: pointer;
 }
 
@@ -64,13 +64,13 @@ button {
 
 /* Bottom Timer Buttons */
 .bottom-buttons {
-    margin-top: 25px;
+    margin-top: 20px;
 }
 
 .huge-button {
-    padding: 30px 70px;
+    padding: 20px 60px;
     font-size: 3em;
-    margin: 10px;
+    margin: 8px;
     cursor: pointer;
 }
 
