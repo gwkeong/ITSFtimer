@@ -9,6 +9,12 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Red Background When Timer Runs Out */
+        body.red-bg {
+            background-color: red;
         }
 
         /* Timer Display */
@@ -16,10 +22,6 @@
             font-size: 4rem; /* Keeps original size */
             font-weight: bold;
             margin: 20px 0;
-        }
-
-        .timer.red {
-            color: red;
         }
 
         /* Timer Buttons */
@@ -121,16 +123,16 @@
             clearInterval(timer); // Reset any existing timer
             timeLeft = seconds;
             updateTimerDisplay();
+            document.body.classList.remove("red-bg"); // Reset background
             timer = setInterval(() => {
                 timeLeft -= 0.01; // Decrease by 10ms
                 if (timeLeft <= 0) {
                     timeLeft = 0;
                     clearInterval(timer);
-                    document.getElementById("timerDisplay").classList.add("red");
+                    document.body.classList.add("red-bg"); // Turn background red
                 }
                 updateTimerDisplay();
             }, 10);
-            document.getElementById("timerDisplay").classList.remove("red");
         }
 
         function updateTimerDisplay() {
