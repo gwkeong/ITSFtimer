@@ -4,21 +4,21 @@ let remainingTime = 0;
 let previousButton = null;
 
 function startTimer(seconds, buttonElement) {
-    // If clicking the same button again
+    const timerDisplay = document.getElementById("timer");
+
+    // If same button is clicked again, pause/resume
     if (buttonElement === previousButton && countdown) {
         if (!isPaused) {
-            // Pause timer
             clearInterval(countdown);
             isPaused = true;
         } else {
-            // Resume timer
             countdown = setInterval(() => {
                 if (remainingTime <= 0) {
                     clearInterval(countdown);
-                    document.getElementById("timer").textContent = "0.000s";
+                    timerDisplay.textContent = "0.000s";
                     document.body.classList.add("red");
                 } else {
-                    document.getElementById("timer").textContent = `${(remainingTime / 1000).toFixed(3)}s`;
+                    timerDisplay.textContent = `${(remainingTime / 1000).toFixed(3)}s`;
                     remainingTime -= 10;
                 }
             }, 10);
@@ -27,7 +27,7 @@ function startTimer(seconds, buttonElement) {
         return;
     }
 
-    // New timer pressed
+    // New button clicked
     clearInterval(countdown);
     remainingTime = seconds * 1000;
     isPaused = false;
@@ -37,18 +37,37 @@ function startTimer(seconds, buttonElement) {
     countdown = setInterval(() => {
         if (remainingTime <= 0) {
             clearInterval(countdown);
-            document.getElementById("timer").textContent = "0.000s";
+            timerDisplay.textContent = "0.000s";
             document.body.classList.add("red");
         } else {
-            document.getElementById("timer").textContent = `${(remainingTime / 1000).toFixed(3)}s`;
+            timerDisplay.textContent = `${(remainingTime / 1000).toFixed(3)}s`;
             remainingTime -= 10;
         }
     }, 10);
 }
 
-document.querySelectorAll(".timer-btn").forEach(button => {
-    button.addEventListener("click", () => {
-        const seconds = parseInt(button.getAttribute("data-time"));
-        startTimer(seconds, button);
+// Hook up the buttons AFTER DOM is ready
+window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".timer-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const seconds = parseInt(button.getAttribute("data-time"));
+            startTimer(seconds, button);
+        });
+    });
+
+    // Jar counter buttons
+    document.querySelectorAll(".counter-btn").forEach((button) => {
+        button.addEventListener("click", function () {
+            const counterId = this.getAttribute("data-counter");
+            const operation = this.getAttribute("data-operation");
+            const counterElement = document.getElementById(counterId);
+            let currentValue = parseInt(counterElement.textContent);
+
+            if (operation === "plus") {
+                counterElement.textContent = currentValue + 1;
+            } else if (operation === "minus") {
+                counterElement.textContent = Math.max(0, currentValue - 1);
+            }
+        });
     });
 });
