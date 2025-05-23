@@ -144,10 +144,10 @@
                 `${wholeSeconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
         }
 
-        document.querySelectorAll(".timer-btn").forEach(button => {
+        document.querySelectorAll(".timer-button").forEach(button => {
             button.addEventListener("click", () => {
-                const seconds = parseInt(button.dataset.time);
-                startTimer(seconds);
+                const seconds = parseInt(button.getAttribute("data-seconds"));
+                startTimer(seconds, button);
             });
         });
 
