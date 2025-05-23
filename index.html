@@ -118,38 +118,55 @@
     </div>
 
     <script>
-        let timer;
-        let timeLeft = 0;
+        let countdown;
+let isPaused = false;
+let remainingTime = 0;
+let previousButton = null;
 
-        function startTimer(seconds) {
-            clearInterval(timer); // Reset any existing timer
-            timeLeft = seconds;
-            updateTimerDisplay();
-            document.body.classList.remove("red-bg"); // Reset background
-            timer = setInterval(() => {
-                timeLeft -= 0.01; // Decrease by 10ms
-                if (timeLeft <= 0) {
-                    timeLeft = 0;
-                    clearInterval(timer);
-                    document.body.classList.add("red-bg"); // Turn background red
+function startTimer(seconds, buttonElement) {
+    const timerDisplay = document.getElementById("timer");
+
+    // If same button is clicked again
+    if (buttonElement === previousButton && countdown) {
+        if (!isPaused) {
+            clearInterval(countdown);
+            isPaused = true;
+        } else {
+            // Resume timer
+            countdown = setInterval(() => {
+                if (remainingTime <= 0) {
+                    clearInterval(countdown);
+                    timerDisplay.textContent = "0.000s";
+                    document.body.classList.add("red");
+                } else {
+                    timerDisplay.textContent = `${(remainingTime / 1000).toFixed(3)}s`;
+                    remainingTime -= 10;
                 }
-                updateTimerDisplay();
             }, 10);
+            isPaused = false;
         }
+        return;
+    }
 
-        function updateTimerDisplay() {
-            const wholeSeconds = Math.floor(timeLeft);
-            const milliseconds = Math.floor((timeLeft - wholeSeconds) * 100);
-            document.getElementById("timerDisplay").textContent =
-                `${wholeSeconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
+    // New timer clicked
+    clearInterval(countdown);
+    remainingTime = seconds * 1000;
+    isPaused = false;
+    previousButton = buttonElement;
+    document.body.classList.remove("red");
+
+    countdown = setInterval(() => {
+        if (remainingTime <= 0) {
+            clearInterval(countdown);
+            timerDisplay.textContent = "0.000s";
+            document.body.classList.add("red");
+        } else {
+            timerDisplay.textContent = `${(remainingTime / 1000).toFixed(3)}s`;
+            remainingTime -= 10;
         }
+    }, 10);
+}
 
-        document.querySelectorAll(".timer-button").forEach(button => {
-            button.addEventListener("click", () => {
-                const seconds = parseInt(button.getAttribute("data-seconds"));
-                startTimer(seconds, button);
-            });
-        });
 
         document.querySelectorAll(".counter-btn").forEach(button => {
             button.addEventListener("click", () => {
