@@ -45,3 +45,10 @@ function startTimer(seconds, buttonElement) {
         }
     }, 10);
 }
+
+document.querySelectorAll(".timer-btn").forEach(button => {
+    button.addEventListener("click", () => {
+        const seconds = parseInt(button.getAttribute("data-time"));
+        startTimer(seconds, button);
+    });
+});
