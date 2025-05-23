@@ -4,7 +4,7 @@ let remainingTime = 0;
 let previousButton = null;
 
 function startTimer(seconds, buttonElement) {
-    const timerDisplay = document.getElementById("timer");
+    const timerDisplay = document.getElementById("timerDisplay");
 
     // If same button is clicked again, pause/resume
     if (buttonElement === previousButton && countdown) {
