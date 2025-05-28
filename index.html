@@ -1,109 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Your existing head content remains the same -->
-    <!-- ... -->
-</head>
-<body>
+<script>
+    let countdown;
+    let isPaused = false;
+    let startTime;
+    let remainingTime = 0;
+    let previousButton = null;
 
-    <h1>ITSF Timer</h1>
+    function startTimer(seconds, buttonElement) {
+        const timerDisplay = document.getElementById("timerDisplay");
 
-    <!-- Timer Display -->
-    <div id="timerDisplay" class="timer">00.00</div>
-
-    <!-- Timer Buttons -->
-    <div class="timer-buttons">
-        <button class="timer-btn" data-time="30">30s</button>
-        <button class="timer-btn" data-time="90">90s</button>
-    </div>
-
-    <!-- Bottom Timer Buttons -->
-    <div class="bottom-buttons">
-        <button class="timer-btn" data-time="10">10s</button>
-        <button class="timer-btn" data-time="15">15s</button>
-    </div>
-
-    <!-- Jar Counters (unchanged) -->
-    <!-- ... -->
-
-    <script>
-        let countdown;
-        let isPaused = false;
-        let remainingTime = 0;
-        let previousButton = null;
-
-        function startTimer(seconds, buttonElement) {
-            const timerDisplay = document.getElementById("timerDisplay"); // Fixed ID
-
-            // If same button is clicked again
-            if (buttonElement === previousButton && countdown) {
-                if (!isPaused) {
-                    clearInterval(countdown);
-                    isPaused = true;
-                } else {
-                    // Resume timer
-                    countdown = setInterval(() => {
-                        if (remainingTime <= 0) {
-                            clearInterval(countdown);
-                            timerDisplay.textContent = "00.00";
-                            document.body.classList.add("red-bg"); // Fixed class name
-                        } else {
-                            const seconds = (remainingTime / 1000).toFixed(2);
-                            timerDisplay.textContent = seconds < 10 ? `0${seconds}` : seconds;
-                            remainingTime -= 10;
-                        }
-                    }, 10);
-                    isPaused = false;
-                }
-                return;
+        // If same button is clicked again (toggle pause/resume)
+        if (buttonElement === previousButton && countdown) {
+            if (!isPaused) {
+                clearInterval(countdown);
+                remainingTime -= Date.now() - startTime; // Update remainingTime correctly
+                isPaused = true;
+            } else {
+                resumeTimer();
             }
-
-            // New timer clicked
-            clearInterval(countdown);
-            remainingTime = seconds * 1000;
-            isPaused = false;
-            previousButton = buttonElement;
-            document.body.classList.remove("red-bg"); // Fixed class name
-
-            countdown = setInterval(() => {
-                if (remainingTime <= 0) {
-                    clearInterval(countdown);
-                    timerDisplay.textContent = "00.00";
-                    document.body.classList.add("red-bg"); // Fixed class name
-                } else {
-                    const seconds = (remainingTime / 1000).toFixed(2);
-                    timerDisplay.textContent = seconds < 10 ? `0${seconds}` : seconds;
-                    remainingTime -= 10;
-                }
-            }, 10);
+            return;
         }
 
-        // Add event listeners to timer buttons
-        document.querySelectorAll(".timer-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                const seconds = parseInt(button.dataset.time);
-                startTimer(seconds, button);
-            });
+        // Reset for a new timer
+        clearInterval(countdown);
+        remainingTime = seconds * 1000;
+        isPaused = false;
+        previousButton = buttonElement;
+        document.body.classList.remove("red-bg"); // Remove red background
+        startTime = Date.now(); // Track when timer starts
+
+        countdown = setInterval(updateTimer, 10);
+    }
+
+    function resumeTimer() {
+        startTime = Date.now(); // Reset start time
+        countdown = setInterval(updateTimer, 10);
+        isPaused = false;
+    }
+
+    function updateTimer() {
+        const timerDisplay = document.getElementById("timerDisplay");
+        const elapsed = Date.now() - startTime;
+
+        if (elapsed >= remainingTime) {
+            clearInterval(countdown);
+            timerDisplay.textContent = "00.00";
+            document.body.classList.add("red-bg"); // Change background to red
+        } else {
+            const seconds = ((remainingTime - elapsed) / 1000).toFixed(2);
+            timerDisplay.textContent = seconds < 10 ? `0${seconds}` : seconds;
+        }
+    }
+
+    // Attach event listeners to timer buttons
+    document.querySelectorAll(".timer-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const seconds = parseInt(button.dataset.time);
+            startTimer(seconds, button);
         });
-
-        // Your existing counter button code
-        document.querySelectorAll(".counter-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                const counterId = button.dataset.counter;
-                const operation = button.dataset.operation;
-                const counterElement = document.getElementById(counterId);
-                let value = parseInt(counterElement.textContent);
-
-                if (operation === "plus") {
-                    value += 1;
-                } else if (operation === "minus" && value > 0) {
-                    value -= 1;
-                }
-
-                counterElement.textContent = value;
-            });
-        });
-    </script>
-    <!-- Your service worker script remains unchanged -->
-</body>
-</html>
+    });
+</script>
