@@ -1,109 +1,38 @@
 let countdown;
-let isPaused = false;
-let remainingTime = 0;
-let previousButton = null;
 
-// Vibration function (mobile-friendly)
-function vibrate() {
-    if ('vibrate' in navigator) {
-        navigator.vibrate([200, 100, 200]); // Vibrate pattern: 200ms on, 100ms off, 200ms on
-    }
-}
+function startTimer(seconds) {
+    clearInterval(countdown); // Clear any existing timer
 
-// Voice announcement function
-function speak(message) {
-    if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(message);
-        utterance.rate = 1.0;
-        utterance.pitch = 1.2;
-        window.speechSynthesis.cancel(); // Clear any previous speech
-        window.speechSynthesis.speak(utterance);
-    }
-}
+    let timeLeft = seconds * 1000; // Convert seconds to milliseconds
+    const timerDisplay = document.getElementById("timer");
+    document.body.classList.remove("red");
 
-function startTimer(seconds, buttonElement) {
-    const timerDisplay = document.getElementById("timerDisplay");
-
-    // Pause/resume logic
-    if (buttonElement === previousButton && countdown) {
-        if (!isPaused) {
+    countdown = setInterval(() => {
+        if (timeLeft <= 0) {
             clearInterval(countdown);
-            isPaused = true;
-            speak("Timer paused"); // Voice feedback
+            timerDisplay.textContent = "0.000s";
+            document.body.classList.add("red"); // Turn background red
         } else {
-            countdown = setInterval(updateTimer, 10);
-            isPaused = false;
-            speak("Resuming");
+            let secondsLeft = (timeLeft / 1000).toFixed(3); // Convert to seconds with milliseconds
+            timerDisplay.textContent = `${secondsLeft}s`;
+            timeLeft -= 10; // Decrease in 10ms intervals
         }
-        return;
-    }
-
-    // New timer
-    clearInterval(countdown);
-    remainingTime = seconds * 1000;
-    isPaused = false;
-    previousButton = buttonElement;
-    document.body.classList.remove("red-bg"); // Fixed class name
-    
-    // Initial voice feedback
-    speak(`${seconds} seconds started`);
-    
-    countdown = setInterval(updateTimer, 10);
+    }, 10);
 }
 
-// Extracted timer update logic
-function updateTimer() {
-    const timerDisplay = document.getElementById("timerDisplay");
-    
-    if (remainingTime <= 0) {
-        clearInterval(countdown);
-        timerDisplay.textContent = "00.00";
-        document.body.classList.add("red-bg");
-        vibrate();
-        speak("Time's up!"); // Final announcement
-    } else {
-        const displaySeconds = (remainingTime / 1000).toFixed(2);
-        timerDisplay.textContent = displaySeconds.padStart(5, '0'); // Always shows 2 decimals
-        
-        // Optional: Announce last 5 seconds
-        if (remainingTime <= 5000 && remainingTime % 1000 === 0) {
-            speak(Math.floor(remainingTime / 1000));
+// JAR COUNTERS - Fixing the issue
+document.querySelectorAll(".counter-btn").forEach((button) => {
+    button.addEventListener("click", function () {
+        const counterId = this.getAttribute("data-counter"); // Get associated counter
+        const operation = this.getAttribute("data-operation"); // "+" or "-"
+        const counterElement = document.getElementById(counterId);
+
+        let currentValue = parseInt(counterElement.textContent);
+
+        if (operation === "plus") {
+            counterElement.textContent = currentValue + 1;
+        } else if (operation === "minus") {
+            counterElement.textContent = Math.max(0, currentValue - 1); // Prevent negative values
         }
-        
-        remainingTime -= 10;
-    }
-}
-
-// Initialize after DOM loads
-window.addEventListener("DOMContentLoaded", () => {
-    // Timer buttons
-    document.querySelectorAll(".timer-btn").forEach(button => {
-        button.addEventListener("click", () => {
-            const seconds = parseInt(button.dataset.time);
-            startTimer(seconds, button);
-        });
-    });
-
-    // Jar counters
-    document.querySelectorAll(".counter-btn").forEach(button => {
-        button.addEventListener("click", function() {
-            const counterId = this.dataset.counter;
-            const operation = this.dataset.operation;
-            const counterElement = document.getElementById(counterId);
-            let value = parseInt(counterElement.textContent);
-
-            if (operation === "plus") {
-                value += 1;
-            } else if (operation === "minus") {
-                value = Math.max(0, value - 1);
-            }
-
-            counterElement.textContent = value;
-            
-            // Optional click feedback
-            if ('vibrate' in navigator) {
-                navigator.vibrate(50);
-            }
-        });
     });
 });
