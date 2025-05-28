@@ -1,80 +1,95 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
-    transition: background-color 0.5s;
+// Timer Variables
+let countdown;
+let isPaused = false;
+let remainingTime = 0;
+let activeButton = null;
+
+// DOM Elements
+const timerDisplay = document.getElementById('timer');
+const timerButtons = document.querySelectorAll('.timer-btn, .big-button, .huge-button');
+
+// Timer Functions
+function startTimer(seconds, button) {
+  // Pause/resume if same button clicked
+  if (button === activeButton && countdown) {
+    togglePause();
+    return;
+  }
+
+  // New timer
+  resetTimer();
+  remainingTime = seconds * 1000;
+  activeButton = button;
+  document.body.classList.remove('red');
+  
+  countdown = setInterval(updateTimer, 10);
 }
 
-.container {
-    margin-top: 40px;
+function updateTimer() {
+  if (remainingTime <= 0) {
+    endTimer();
+    return;
+  }
+  
+  remainingTime -= 10;
+  timerDisplay.textContent = formatTime(remainingTime);
 }
 
-h1 {
-    font-size: 2.5em;
+function formatTime(ms) {
+  const seconds = (ms / 1000).toFixed(2);
+  return seconds.padStart(5, '0'); // Ensures format like "05.00"
 }
 
-/* Timer Buttons */
-.timer-buttons {
-    margin-bottom: 15px;
+function togglePause() {
+  if (isPaused) {
+    countdown = setInterval(updateTimer, 10);
+    isPaused = false;
+  } else {
+    clearInterval(countdown);
+    isPaused = true;
+  }
 }
 
-.big-button {
-    padding: 10px 30px;
-    font-size: 2em;
-    margin: 7px;
-    cursor: pointer;
+function endTimer() {
+  clearInterval(countdown);
+  timerDisplay.textContent = '00.00';
+  document.body.classList.add('red');
+  activeButton = null;
 }
 
-/* Timer Display */
-#timer {
-    font-size: 4em;
-    margin: 20px 0;
-    font-weight: bold;
+function resetTimer() {
+  clearInterval(countdown);
+  isPaused = false;
+  document.body.classList.remove('red');
 }
 
-/* Ensures the jars are side by side */
-.jar-counters {
-    display: flex;
-    justify-content: center;
-    gap: 40px; /* Adjusts spacing between jars */
-    margin: 15px 0;
-    flex-wrap: wrap; /* Ensures responsiveness */
+// Event Listeners
+function init() {
+  // Timer buttons
+  timerButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const seconds = parseInt(button.dataset.time);
+      startTimer(seconds, button);
+    });
+  });
+
+  // Jar counters
+  document.querySelectorAll('.counter-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const counterId = this.dataset.counter;
+      const operation = this.dataset.operation;
+      const counterElement = document.getElementById(counterId);
+      let value = parseInt(counterElement.textContent) || 0;
+
+      value = operation === 'plus' ? value + 1 : Math.max(0, value - 1);
+      counterElement.textContent = value;
+    });
+  });
 }
 
-/* Styles each jar */
-.jar {
-    display: flex;
-    align-items: center;
-    gap: 3px; /* Adjusts spacing between buttons and count */
-    padding: 3px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 0.5em;
-    background: white;
-    flex-direction: row; /* Ensures horizontal layout */
-}
-
-
-button {
-    padding: 10px 20px;
-    font-size: 1.2em;
-    margin: 10px;
-    cursor: pointer;
-}
-
-/* Bottom Timer Buttons */
-.bottom-buttons {
-    margin-top: 20px;
-}
-
-.huge-button {
-    padding: 20px 60px;
-    font-size: 3em;
-    margin: 8px;
-    cursor: pointer;
-}
-
-/* Red background when time runs out */
-body.red {
-    background-color: red;
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
 }
